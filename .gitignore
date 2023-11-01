@@ -1,0 +1,38 @@
+### Terraform ###
+*.tfstate
+*.tfstate.*.backup
+*.tfstate.backup
+*.tfvars
+.terraform/
+crash.log
+*.zip
+.env
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Files that might appear on external disk
+.lock.hcl
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+*.log
+
+# Backup files for various editors and environments
+*.bak
+*.BAK
+*.bak[0-9]*
+*.BAK[0-9]*
+*.tmp
+*.swp
+*~[0-9]*~
+*.OLD
+/save/
+/tags
+/tags.*
