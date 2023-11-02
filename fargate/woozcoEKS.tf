@@ -3,13 +3,13 @@ provider "aws" {
 }
 
 locals {
-  cluster_name = "woozco-test"
+  cluster_name = "Woozco"
 }
 
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "woozco-test"
+  name = "Woozco"
   cidr = "10.194.0.0/16"
 
   azs             = ["ap-northeast-2a", "ap-northeast-2c"]
@@ -36,7 +36,7 @@ module "eks" {
   source = "terraform-aws-modules/eks/aws"
 
   cluster_name                    = local.cluster_name
-  cluster_version                 = "1.28"
+  cluster_version                 = "1.27"
   cluster_endpoint_private_access = false
   cluster_endpoint_public_access  = true
 
@@ -54,18 +54,26 @@ module "eks" {
   subnet_ids = module.vpc.private_subnets
 
   cloudwatch_log_group_retention_in_days = 1
-
-  fargate_profiles = {
-    default = {
-      name = "default"
-      selectors = [
-        {
-          namespace = "kube-system"
-        },
-        {
-          namespace = "default"
-        }
-      ]
-    }
+  
+  eks_managed_node_group_defaults = {
+    ami_type                   = "AL2_x86_64"
+		capacity_type              = "SPOT"
+  		
+    create_iam_role            = false
+    # iam_role_name              = "${local.name}-eks-node-role"
+    iam_role_arn               = module.iam_assumable_role_custom.iam_role_arn
+    iam_role_use_name_prefix   = false
+    iam_role_attach_cni_policy = true
+    iam_role_additional_policies = {
+      AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"  # 추가
+    }      
+    use_name_prefix            = false
+      
+    create_launch_template          = false
+    use_custom_launch_template      = true
+    enable_bootstrap_user_data      = true
   }
+  
+    
+  
 }
