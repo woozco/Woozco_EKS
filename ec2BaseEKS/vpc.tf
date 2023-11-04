@@ -18,6 +18,7 @@ module "vpc" {
 
   tags = {
     CreatedBy = "Terraform"
+    kubernetes.io/cluster/devops-eks  = "shared" # nginx에서 subnet에 대해서 찾을 때 필요
   }
 }
 
